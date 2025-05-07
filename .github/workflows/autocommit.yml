@@ -25,7 +25,7 @@ jobs:
       - name: Commit Changes
         run: |
           git config --local user.name "MuhSyahrul29"
-          git config --local user.email "staffit1sou@gmail.com"
+          git config --local user.email "rulztarito29@gmail.com"
           git add -A
 
           arr[0]="chore(bot): 🔥 auto commit"
@@ -44,8 +44,8 @@ jobs:
           git commit -m "${arr[$rand]}"
 
       - name: GitHub Push
-        uses: MuhSyahrul29/github-push-action@master
+        uses: ad-m/github-push-action@master
         with:
           force: true
           directory: '.'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT_TOKEN }}
