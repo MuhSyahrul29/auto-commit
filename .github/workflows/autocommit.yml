@@ -51,4 +51,4 @@ jobs:
         with:
           force: true
           directory: '.'
-          github_token: ${{ secrets.GH_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
