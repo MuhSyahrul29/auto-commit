@@ -1,51 +1,37 @@
-name: Auto Commit
+name: Bishwa's Daily Commit
 
 on:
-  push:
-    branches:
-      - main
-
   schedule:
-    - cron: '0 4,12,15,18,19 * * *' # See https://crontab.guru/#0_4,12,15,18,19_*_*_*
+   - cron: '0 4,12,15,18,19 * * *' # See https://crontab.guru/#0_4,12,15,18,19_*_*_*
 
 jobs:
-  auto_commit:
+  commit:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          fetch-depth: 0
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: main 
 
-      - name: Modify Last Update
-        run: |
-          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
-          echo $d > LAST_UPDATED
-
-      - name: Commit Changes
-        run: |
-          git config --local user.name "MuhSyahrul29"
-          git config --local user.email "rulztarito29@gmail.com"
-          git add -A
-
-          arr[0]="chore(bot): 🔥 auto commit"
-          arr[1]="chore(bot): 💀 auto commit"
-          arr[2]="chore(bot): 👹 auto commit"
-          arr[3]="chore(bot): 👺 auto commit"
-          arr[4]="chore(bot): 🤡 auto commit"
-          arr[5]="chore(bot): 👻 auto commit"
-          arr[6]="chore(bot): 👽 auto commit"
-          arr[7]="chore(bot): 🤖 auto commit"
-          arr[8]="chore(bot): 👾 auto commit"
-          arr[9]="chore(bot): 😈 auto commit"
-
-          rand=$[$RANDOM % ${#arr[@]}]
-
-          git commit -m "${arr[$rand]}"
-
-      - name: GitHub Push
-        uses: ad-m/github-push-action@master
-        with:
-          force: true
-          directory: '.'
-          github_token: ${{ secrets.PAT_TOKEN }}
+    - name: Create file and commit
+      run: |
+        FILE="commit_number.md"
+        if [ ! -f "$FILE" ]; then
+          echo "Hello, my name is syahrul" > "$FILE"
+          echo "commit number: 1" >> "$FILE"
+        else
+          CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE")
+          if [ -z "$CURRENT_COUNT" ]; then
+            CURRENT_COUNT=0
+          fi
+          NEXT_COUNT=$((CURRENT_COUNT + 1))
+          sed -i "/commit number: /c\commit number: $NEXT_COUNT" "$FILE"
+        fi
+        git config --global user.name "MuhSyahrul29"
+        git config --global user.email "rulztarito29@gmail.com"
+        git add "$FILE"
+        git commit -m "Hello, my name is Syahrul nice to meet you"
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/MuhSyahrul29/mean-commit.git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
